@@ -3,7 +3,23 @@ import requests
 
 from utils.datetime import timestampToDate
 
-_headers = {"User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36"}
+_headers = {
+    'authority': 'api.sofascore.com',
+    'accept': '*/*',
+    'accept-language': 'en-US,en;q=0.9',
+    'cache-control': 'max-age=0',
+    'if-none-match': 'W/"0398d29a54"',
+    'origin': 'https://www.sofascore.com',
+    'referer': 'https://www.sofascore.com/',
+    'sec-ch-ua': '"Brave";v="119", "Chromium";v="119", "Not?A_Brand";v="24"',
+    'sec-ch-ua-mobile': '?0',
+    'sec-ch-ua-platform': '"macOS"',
+    'sec-fetch-dest': 'empty',
+    'sec-fetch-mode': 'cors',
+    'sec-fetch-site': 'same-site',
+    'sec-gpc': '1',
+    'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
+}
 
 _event_url_template = "https://api.sofascore.com/api/v1/event/{}"
 _lineups_path = "/lineups"
