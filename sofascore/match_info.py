@@ -15,6 +15,7 @@ _h2h_events_url_format = "https://api.sofascore.com/api/v1/event/{}/h2h/events"
 def fetchTeamsAndDate(event_id):
    web_url = _event_url_template.format(event_id)
    response = requests.get(web_url, headers=_headers)
+   print(response)      
    json = response.json()
    event = json['event']
    return {
