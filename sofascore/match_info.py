@@ -1,6 +1,5 @@
 import requests
 # from bs4 import BeautifulSoup
-from tabulate import tabulate
 
 from utils.datetime import timestampToDate
 
@@ -61,33 +60,7 @@ def fetchTableStandings(season):
   json = response.json()
   # Extract the relevant data
   standings = json['standings'][0]['rows']
-
-  # Prepare data for tabulate
-  table_data = []
-  for entry in standings:
-      team_info = entry['team']
-      promotion = ""
-      if 'promotion' in entry:
-         promotion = entry['promotion']['text']
-      row = [
-          entry['position'],
-          promotion,
-          team_info['name'],
-          entry['matches'],
-          entry['wins'],
-          entry['losses'],
-          entry['draws'],
-          entry['scoresFor'],
-          entry['scoresAgainst'],
-          entry['points']
-      ]
-      table_data.append(row)
-
-  # Define headers
-  table_headers = ["Position", "Promotion", "Team", "Matches", "Wins", "Losses", "Draws", "Goals For", "Goals Against", "Points"]
-
-  # Render the table
-  return f"Standings:\n{tabulate(table_data, headers=table_headers, tablefmt='grid')}"
+  return standings
 
 def fetchForm(team):
    web_url = _team_form_url_format.format(team['id'])
@@ -131,17 +104,3 @@ def getMatchInfo(event_id):
      "standings": standings,
      "h2h_results": h2hResults
   }
-
-#   print(event_name)
-
-#   print("\nLineups")
-#   print(f"{homeTeam['name']}")
-#   printLineup(lineups['home'])
-#   print(f"\n{awayTeam['name']}")
-#   printLineup(lineups['away'])
-
-#   print(f"\n{standings}")
-
-#   print(f"\n{homeTeam['name']} Form: {homeForm}")
-#   print(f"\n{awayTeam['name']} Form: {awayForm}")
-#   print(f"\nH2H previous results: {h2hResults}")
