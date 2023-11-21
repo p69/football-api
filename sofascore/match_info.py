@@ -4,23 +4,10 @@ import requests
 from utils.datetime import timestampToDate
 
 _headers = {
-    'authority': 'api.sofascore.com',
-    'accept': '*/*',
-    'accept-language': 'en-US,en;q=0.9',
-    'cache-control': 'max-age=0',
-    'if-none-match': 'W/"0398d29a54"',
-    'origin': 'https://www.sofascore.com',
-    'referer': 'https://www.sofascore.com/',
-    'sec-ch-ua': '"Brave";v="119", "Chromium";v="119", "Not?A_Brand";v="24"',
-    'sec-ch-ua-mobile': '?0',
-    'sec-ch-ua-platform': '"macOS"',
-    'sec-fetch-dest': 'empty',
-    'sec-fetch-mode': 'cors',
-    'sec-fetch-site': 'same-site',
-    'sec-gpc': '1',
     'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
 }
 
+_base_crawler_url = 'https://api.crawlbase.com/?token=RA4zal8GzJuqs_0759kP1A&url='
 _event_url_template = "https://api.sofascore.com/api/v1/event/{}"
 _lineups_path = "/lineups"
 _standings_url_format = "https://api.sofascore.com/api/v1/tournament/{}/season/{}/standings/total"
@@ -29,7 +16,7 @@ _h2h_events_url_format = "https://api.sofascore.com/api/v1/event/{}/h2h/events"
 
 
 def fetchTeamsAndDate(event_id):
-   web_url = _event_url_template.format(event_id)
+   web_url = _base_crawler_url + _event_url_template.format(event_id)
    response = requests.get(web_url, headers=_headers)
    print(response)      
    json = response.json()
@@ -58,7 +45,7 @@ def parseLineups(team):
   }
 
 def fetchLineups(event_id):
-   web_url = _event_url_template.format(event_id) + _lineups_path
+   web_url = _base_crawler_url +  _event_url_template.format(event_id) + _lineups_path
    response = requests.get(web_url, headers=_headers)
    if response.status_code != 200:
       return {
@@ -72,7 +59,7 @@ def fetchLineups(event_id):
    }
 
 def fetchTableStandings(season):
-  web_url = _standings_url_format.format(season['tournament'], season['id'])
+  web_url = _base_crawler_url +  _standings_url_format.format(season['tournament'], season['id'])
   response = requests.get(web_url, headers=_headers)
   json = response.json()
   # Extract the relevant data
@@ -80,7 +67,7 @@ def fetchTableStandings(season):
   return standings
 
 def fetchForm(team):
-   web_url = _team_form_url_format.format(team['id'])
+   web_url = _base_crawler_url +  _team_form_url_format.format(team['id'])
    response = requests.get(web_url, headers=_headers)
    json = response.json()
    filtered_sorted_matches = sorted(
@@ -90,7 +77,7 @@ def fetchForm(team):
    return "; ".join(f"{timestampToDate(event['startTimestamp'])}: {event['homeTeam']['name']} {event['homeScore']['current']}-{event['awayScore']['current']} {event['awayTeam']['name']}" for event in filtered_sorted_matches)
 
 def fetchH2HResults(custom_id):
-   web_url = _h2h_events_url_format.format(custom_id)
+   web_url = _base_crawler_url + _h2h_events_url_format.format(custom_id)
    response = requests.get(web_url, headers=_headers)
    json = response.json()
    filtered_sorted_matches = sorted(
