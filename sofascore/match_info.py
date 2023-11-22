@@ -1,14 +1,8 @@
 import requests
-import os
+from .requests_header import headers
 # from bs4 import BeautifulSoup
 
 from utils.datetime import timestampToDate
-
-rapid_api_key = os.getenv('RAPIDAPI_KEY')
-_headers = {
-    'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
-    'X-RapidAPI-Key': rapid_api_key
-}
 
 _event_url_template = "https://sofascore.p.rapidapi.com/matches/detail?matchId={}"
 _lineups_url_template = "https://sofascore.p.rapidapi.com/matches/get-lineups?matchId={}"
@@ -19,7 +13,7 @@ _h2h_events_url_format = "https://sofascore.p.rapidapi.com/matches/get-head2head
 
 def fetchTeamsAndDate(event_id):
    web_url = _event_url_template.format(event_id)
-   response = requests.get(web_url, headers=_headers)
+   response = requests.get(web_url, headers=headers)
    print(response)      
    json = response.json()
    event = json['event']
@@ -47,7 +41,7 @@ def parseLineups(team):
 
 def fetchLineups(event_id):
    web_url = _lineups_url_template.format(event_id)
-   response = requests.get(web_url, headers=_headers)
+   response = requests.get(web_url, headers=headers)
    if response.status_code != 200:
       return {
          'home': 'Not available',
@@ -70,7 +64,7 @@ def fetchLineups(event_id):
 
 def fetchTableStandings(season):
   web_url = _standings_url_format.format(season['tournament'], season['id'])
-  response = requests.get(web_url, headers=_headers)
+  response = requests.get(web_url, headers=headers)
   json = response.json()
   # Extract the relevant data
   standings = json['standings'][0]['rows']
@@ -78,7 +72,7 @@ def fetchTableStandings(season):
 
 def fetchForm(team):
    web_url = _team_form_url_format.format(team['id'])
-   response = requests.get(web_url, headers=_headers)
+   response = requests.get(web_url, headers=headers)
    json = response.json()
    filtered_sorted_matches = sorted(
     [item for item in json['events'] if item['status']['type'] == "finished"],
@@ -88,7 +82,7 @@ def fetchForm(team):
 
 def fetchH2HResults(matchId):
    web_url = _h2h_events_url_format.format(matchId)
-   response = requests.get(web_url, headers=_headers)
+   response = requests.get(web_url, headers=headers)
    json = response.json()
    events = [event for tournament in json["tournaments"] for event in tournament["events"]]
    filtered_sorted_matches = sorted(
