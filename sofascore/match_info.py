@@ -10,6 +10,12 @@ _standings_url_format = "https://sofascore.p.rapidapi.com/tournaments/get-standi
 _team_form_url_format = "https://sofascore.p.rapidapi.com/teams/get-last-matches?teamId={}&page=0"
 _h2h_events_url_format = "https://sofascore.p.rapidapi.com/matches/get-head2head?matchId={}"
 
+def _map_to_team_object(team_json):
+   return {
+      'id': team_json['id'],
+      'name': team_json['fullName'],
+      'manager': team_json['manager']['name']
+   }
 
 def fetchTeamsAndDate(event_id):
    web_url = _event_url_template.format(event_id)
@@ -19,8 +25,8 @@ def fetchTeamsAndDate(event_id):
    event = json['event']
    return {
       'date': timestampToDate(event['startTimestamp']),
-      'home': event['homeTeam'],
-      'away': event['awayTeam'],
+      'home': _map_to_team_object(event['homeTeam']),
+      'away': _map_to_team_object(event['awayTeam']),
       'season': {
          'tournament': event['tournament']['uniqueTournament']['id'],
          'id': event['season']['id']
@@ -67,7 +73,25 @@ def fetchTableStandings(season):
   response = requests.get(web_url, headers=headers)
   json = response.json()
   # Extract the relevant data
-  standings = json['standings'][0]['rows']
+  standings = []
+  
+  for row in json['standings'][0]['rows']:
+     team = row['team']['name']
+     standing = {
+        'team': team,
+        'position': row['position'],
+        'matches': row['matches'],
+        'wins': row['wins'],
+        'draws': row['draws'],
+        'losses': row['losses'],
+        'scoresFor': row['scoresFor'],
+        'scoresAgainst': row['scoresAgainst'],
+        'points': row['points']
+     }
+     if 'promotion' in row:
+        standing['promotion'] = row['promotion']['text']
+     standings.append(standing)     
+
   return standings
 
 def fetchForm(team):
