@@ -104,11 +104,11 @@ def _fetch_and_parse_articles(category, team):
     token = fetch_token()
     print("Token obtained")
     web_url = _articles_url_template.format(category, team)
-    response = requests.get(web_url, headers=headers | {"project": "livescore.com", "origin": "https://www.livescore.com", "authorization": f"Bearer {token}"})
+    response = requests.get(web_url, headers={**headers, **{"project": "livescore.com", "origin": "https://www.livescore.com", "authorization": f"Bearer {token}"}})
 
     if response.status_code == 401:
         token = fetch_token
-        response = requests.get(web_url, headers=headers | {"project": "livescore.com", "origin": "https://www.livescore.com", "authorization": f"Bearer {token}"})
+        response = requests.get(web_url, headers={**headers, **{"project": "livescore.com", "origin": "https://www.livescore.com", "authorization": f"Bearer {token}"}})
 
     if response.status_code != 200:
         print(f"Skipping articles for {category}-{team}. Response status {response.status_code}")
