@@ -1,4 +1,6 @@
 import requests
+
+from utils.datetime import timestampToDateWithTime
 from .requests_header import headers
 from sofascore.leagues import FootballLeague
 
@@ -8,4 +10,15 @@ def getUpcomingMatches(league:FootballLeague):
   print(f"Getting upcoming matches for {league}")
   web_url = _next_url_template.format(league.id, league.latestSeason)
   response = requests.get(web_url, headers=headers)
-  return response.json()
+  json = response.json()
+  matches = []
+  for event in json['events']:
+    match = {
+      'id': event['id'],
+      'round': event['roundInfo']['round'],
+      'date': timestampToDateWithTime(event['startTimestamp']),
+      'homeTeam': event['homeTeam']['name'],
+      'awayTeam': event['awayTeam']['name']
+    }
+    matches.append(match)
+  return matches
