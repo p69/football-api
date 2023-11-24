@@ -72,6 +72,8 @@ def _fetch_all_events(league_slug):
         away_team = event['T2'][0]
         name = f"{home_team['Nm']} - {away_team['Nm']}"
         date = _format_date(event['Esd'])
+        if "NewsTag" not in home_team or "NewsTag" not in away_team:
+            continue
         home_team_news_tag = home_team['NewsTag']
         away_team_news_tag = away_team['NewsTag']
         home_team_category, home_team_id = _extract_category_and_team_id(home_team_news_tag)        
