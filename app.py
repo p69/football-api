@@ -18,6 +18,8 @@ cache = Cache(app)
 
 parser = reqparse.RequestParser()
 parser.add_argument('team', type=str, required=False, help='Team name for filtering news')
+parser.add_argument('page', type=int, required=False, default=1, help='Page number')
+parser.add_argument('page_size', type=int, required=False, default=10, help='Number of items per page')
 
 api = Api(app, version='1.0', title='My simple football API', description='Get upcoming matches, match details, odds and news')
 
@@ -115,15 +117,40 @@ class LeagueNews(Resource):
 
         args = parser.parse_args()
         team_name = args.get('team')
-        if team_name == None:
-            return full_json
-        else:
-            team_name = team_name.lower()
-        
-        for item in full_json:
-            if item['home']['name'].lower() == team_name:
-                return item['home_team_news']
-            if item['away']['name'].lower() == team_name:
-                return item['away_team_news']
+        page = args.get('page')
+        page_size = args.get('page_size')
 
-        api.abort(400, f"Bad Request. No news for team {team_name}")
+        # Filter by team name if provided
+        filtered_json = []
+        if team_name:
+            team_name = team_name.lower()
+            
+             #[item for item in full_json if item['home']['name'].lower() == team_name or item['away']['name'].lower() == team_name]
+            for item in full_json:
+                if item['home']['name'].lower() == team_name:
+                  filtered_json.extend(item['home_team_news'])
+                if item['away']['name'].lower() == team_name:
+                  filtered_json.extend(item['away_team_news'])
+        else:
+            filtered_json = full_json
+
+         # Calculate total pages
+        total_items = len(filtered_json)        
+        total_pages = (total_items + page_size - 1) // page_size
+        print(f"Total items: {total_items}")
+        print(f"Total pages: {total_pages}")
+        
+        # Pagination logic
+        start = (page - 1) * page_size
+        end = start + page_size
+        paged_json = filtered_json[start:end]
+
+        if not paged_json:
+            api.abort(404, f"No news available for page {page}.")
+
+        return {
+            "total_pages": total_pages,
+            "current_page": page,
+            "page_size": page_size,
+            "data": paged_json
+        }
