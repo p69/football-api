@@ -2,14 +2,23 @@ from dotenv import load_dotenv
 load_dotenv()
 from sofascore.leagues import FootballLeague
 from sofascore.next_matches import getUpcomingMatches
-from flask import Flask
-from flask_restx import Api, Namespace, fields
+from flask import Flask, request
+from flask_restx import Api, Namespace, fields, reqparse
 from flask_restx import Resource
 from sofascore.match_info import getMatchInfo
 from sofascore.match_odds import get_odds_api_model, getMatchOdds
 from sofascore.livescore_news import getLatestNews
+from flask_caching import Cache
 
 app = Flask(__name__)
+
+# Configure Cache
+app.config['CACHE_TYPE'] = 'simple'  # You can choose different backends like Redis, Memcached
+cache = Cache(app)
+
+parser = reqparse.RequestParser()
+parser.add_argument('team', type=str, required=False, help='Team name for filtering news')
+
 api = Api(app, version='1.0', title='My simple football API', description='Get upcoming matches, match details, odds and news')
 
 match_ns = Namespace('match', description='Match related operations')
@@ -81,15 +90,40 @@ class UpcomingMatches(Resource):
             api.abort(400, "Bad Request")
         result = getUpcomingMatches(league)
         return result
+    
+
+def make_cache_key(*args, **kwargs):
+    return request.path
+
+@cache.cached(timeout=3600, key_prefix=make_cache_key)
+def fetch_all_news_for_league(league:FootballLeague):
+    return getLatestNews(league)
+
 
 @league_ns.route('/<string:league_name>/news')
 class LeagueNews(Resource):
     @league_ns.doc(params={'league_name': {'description': 'Name of the football league',
                                            'enum': allowed_league_names,
-                                           'required': True}})
+                                           'required': True}})    
+    @league_ns.expect(parser)
     def get(self, league_name):
         league = FootballLeague.from_string(league_name.upper())
         if league is None:
             api.abort(400, "Bad Request")
-        result = getLatestNews(league)
-        return result
+
+        full_json = fetch_all_news_for_league(league)
+
+        args = parser.parse_args()
+        team_name = args.get('team')
+        if team_name == None:
+            return full_json
+        else:
+            team_name = team_name.lower()
+        
+        for item in full_json:
+            if item['home']['name'].lower() == team_name:
+                return item['home_team_news']
+            if item['away']['name'].lower() == team_name:
+                return item['away_team_news']
+
+        api.abort(400, f"Bad Request. No news for team {team_name}")

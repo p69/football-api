@@ -3,3 +3,4 @@ Gunicorn
 requests
 python-dotenv
 flask-restx
+Flask-Caching
