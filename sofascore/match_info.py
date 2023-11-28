@@ -4,11 +4,11 @@ from .requests_header import headers
 
 from utils.datetime import timestampToDate
 
-_event_url_template = "https://sofascore.p.rapidapi.com/matches/detail?matchId={}"
-_lineups_url_template = "https://sofascore.p.rapidapi.com/matches/get-lineups?matchId={}"
-_standings_url_format = "https://sofascore.p.rapidapi.com/tournaments/get-standings?tournamentId={}&seasonId={}"
-_team_form_url_format = "https://sofascore.p.rapidapi.com/teams/get-last-matches?teamId={}&page=0"
-_h2h_events_url_format = "https://sofascore.p.rapidapi.com/matches/get-head2head?matchId={}"
+_event_url_template = "https://sofascores.p.rapidapi.com/v1/events/data?event_id={}"
+_lineups_url_template = "https://sofascores.p.rapidapi.com/v1/events/lineups?event_id={}"
+_standings_url_format = "https://sofascores.p.rapidapi.com/v1/seasons/standings?standing_type=total&unique_tournament_id={}&seasons_id={}"
+_team_form_url_format = "https://sofascores.p.rapidapi.com/v1/teams/recent-form?team_id={}"
+_h2h_events_url_format = "https://sofascores.p.rapidapi.com/v1/events/h2h-events?custom_event_id={}"
 
 def _map_to_team_object(team_json):
    return {
@@ -20,13 +20,13 @@ def _map_to_team_object(team_json):
 def fetchTeamsAndDate(event_id):
    web_url = _event_url_template.format(event_id)
    response = requests.get(web_url, headers=headers)
-   print(response)      
    json = response.json()
-   event = json['event']
+   event = json['data']
    return {
       'date': timestampToDate(event['startTimestamp']),
       'home': _map_to_team_object(event['homeTeam']),
       'away': _map_to_team_object(event['awayTeam']),
+      'customId': event.get('customId', ""),
       'season': {
          'tournament': event['tournament']['uniqueTournament']['id'],
          'id': event['season']['id']
@@ -55,13 +55,21 @@ def fetchLineups(event_id):
       }
    json = response.json()
 
+   if 'data' not in json:
+      return {
+         'home': 'Not available',
+         'away': 'Not available'
+      }
+   
+   data = json['data']
+
    homeLineup = 'Not available'
-   if 'home' in json:
-      homeLineup = parseLineups(json['home'])
+   if 'home' in data:
+      homeLineup = parseLineups(data['home'])
    
    awayLineup = 'Not available'
-   if 'away' in json:
-      awayLineup = parseLineups(json['away'])
+   if 'away' in data:
+      awayLineup = parseLineups(data['away'])
 
    return {
       'home': homeLineup,
@@ -75,7 +83,7 @@ def fetchTableStandings(season):
   # Extract the relevant data
   standings = []
   
-  for row in json['standings'][0]['rows']:
+  for row in json['data'][0]['rows']:
      team = row['team']['name']
      standing = {
         'team': team,
@@ -97,7 +105,7 @@ def fetchTableStandings(season):
 def fetchForm(team):
    web_url = _team_form_url_format.format(team['id'])
    response = requests.get(web_url, headers=headers)
-   json = response.json()
+   json = response.json()['data']
    filtered_sorted_matches = sorted(
     [item for item in json['events'] if item['status']['type'] == "finished"],
     key=lambda x: x['startTimestamp'])
@@ -108,7 +116,7 @@ def fetchH2HResults(matchId):
    web_url = _h2h_events_url_format.format(matchId)
    response = requests.get(web_url, headers=headers)
    json = response.json()
-   events = [event for tournament in json["tournaments"] for event in tournament["events"]]
+   events = json['data'] # [event for tournament in json["tournaments"] for event in tournament["events"]]
    filtered_sorted_matches = sorted(
     [item for item in events if item['status']['type'] == "finished"],
     key=lambda x: x['startTimestamp'])
@@ -132,7 +140,9 @@ def getMatchInfo(event_id):
   standings = fetchTableStandings(matchInfo['season'])
   print("Success")
   print('Fetching H2H')
-  h2hResults = fetchH2HResults(event_id)
+  h2hResults = "Not Available"
+  if matchInfo['customId'] != "":
+     h2hResults = fetchH2HResults(matchInfo['customId'])     
   print("Success")
   event_name = f"{matchInfo['date']}: {homeTeam['name']} vs {awayTeam['name']}"
 

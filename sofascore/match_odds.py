@@ -30,12 +30,12 @@ def get_odds_api_model(api):
     'eventId': fields.Integer(required=True, description='Match unique id'),
     'markets': fields.List(fields.Nested(_odds_market_model), required=True, description='Available markets for current match'),
   })
-  return _odds_api_model
+  return _odds_market_model
 
-_odds_url_template = "https://sofascore.p.rapidapi.com/matches/get-all-odds?matchId={}"
+_odds_url_template = "https://sofascores.p.rapidapi.com/v1/events/odds/all?event_id={}&odds_format=decimal&provider_id=1"
 
 def getMatchOdds(id):
   print(f"Getting odds for match {id}")
   web_url = _odds_url_template.format(id)
   response = requests.get(web_url, headers=headers)
-  return response.json()
+  return response.json()['data']

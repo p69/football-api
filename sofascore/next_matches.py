@@ -4,7 +4,7 @@ from utils.datetime import timestampToDateWithTime
 from .requests_header import headers
 from sofascore.leagues import FootballLeague
 
-_next_url_template = "https://sofascore.p.rapidapi.com/tournaments/get-next-matches?tournamentId={}&seasonId={}&pageIndex=0"
+_next_url_template = "https://sofascores.p.rapidapi.com/v1/seasons/events?course_events=next&unique_tournament_id={}&seasons_id={}&page=0"
 
 def getUpcomingMatches(league:FootballLeague):
   print(f"Getting upcoming matches for {league}")
@@ -12,7 +12,7 @@ def getUpcomingMatches(league:FootballLeague):
   response = requests.get(web_url, headers=headers)
   json = response.json()
   matches = []
-  for event in json['events']:
+  for event in json['data']['events']:
     match = {
       'id': event['id'],
       'round': event['roundInfo']['round'],
