@@ -1,0 +1,299 @@
+openapi: 3.0.1
+info:
+  title: My simple football API
+  description: "Get upcoming matches, match details, odds and news"
+  version: "1.0"
+servers:
+- url: https://footabll-api.onrender.com/
+tags:
+- name: match
+  description: Match related operations
+- name: league
+  description: Leagues related operations
+paths:
+  /league/{league_name}/news:
+    get:      
+      tags:
+      - league
+      operationId: Get latest news
+      x-openai-isConsequential: false
+
+      parameters:
+      - name: league_name
+        in: path
+        description: Name of the football league
+        required: true
+        schema:
+          type: string
+          enum:
+          - england
+          - spain
+          - germany
+          - italy
+          - france
+          - champions_league
+          - europa_league
+      - name: team
+        in: query
+        description: Name of the team for the news
+        schema:
+          type: string
+      - name: page_size
+        in: query
+        description: Page size
+        schema:
+          type: integer
+          default: 10
+          optional: true
+      - name: page
+        in: query
+        description: current page
+        schema:
+          type: integer
+          default: 1
+          optional: true
+      responses:
+        "200":
+          description: Success
+          content: {}
+  /league/{league_name}/upcoming:
+    get:
+      tags:
+      - league
+      operationId: Get upcoming matches
+      x-openai-isConsequential: false
+      parameters:
+      - name: league_name
+        in: path
+        description: Name of the football league
+        required: true
+        schema:
+          type: string
+          enum:
+          - england
+          - spain
+          - germany
+          - italy
+          - france
+          - champions_league
+          - europa_league
+      responses:
+        "200":
+          description: Success
+          content: {}
+  /match/odds/{id}:
+    get:      
+      tags:
+      - match
+      operationId: Get match odds
+      x-openai-isConsequential: false
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Odds'
+  /match/{id}:
+    get:      
+      tags:
+      - match
+      operationId: Get match info
+      x-openai-isConsequential: false
+      parameters:
+      - name: id
+        in: path
+        description: The match identifier
+        required: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Match'
+components:
+  schemas:
+    Match:
+      required:
+      - away_team
+      - date
+      - h2h_results
+      - home_team
+      - match_name
+      - standings
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The match identifier
+          readOnly: true
+        date:
+          type: string
+          description: Match start date in format "YYYY-MM-DD"
+        match_name:
+          type: string
+          description: Match name
+        home_team:
+          type: object
+          description: Information about home team
+          allOf:
+          - $ref: '#/components/schemas/Team'
+        away_team:
+          type: object
+          description: Information about away team
+          allOf:
+          - $ref: '#/components/schemas/Team'
+        h2h_results:
+          type: string
+          description: Head to Head results for current teams across all tournaments
+        standings:
+          type: array
+          description: Teams standing in the league
+          items:
+            $ref: '#/components/schemas/StandingTeam'
+    Team:
+      required:
+      - form
+      - lineup
+      - manager
+      - name
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The team identifier
+          readOnly: true
+        name:
+          type: string
+          description: Full team name
+        manager:
+          type: string
+          description: Name of the manager
+        lineup:
+          type: string
+          description: Lineup for current match. Will be "Not Available" if its not
+            available yet
+        form:
+          type: string
+          description: Latets results for current team across all tournaments
+    StandingTeam:
+      required:
+      - draws
+      - losses
+      - matches
+      - points
+      - position
+      - scoresAgainst
+      - scoresFor
+      - wins
+      type: object
+      properties:
+        name:
+          type: string
+          description: Team name
+          readOnly: true
+        position:
+          type: integer
+          description: Team position in the table
+        matches:
+          type: integer
+          description: Total matches played
+        wins:
+          type: integer
+          description: Total wins
+        draws:
+          type: integer
+          description: Total draws
+        losses:
+          type: integer
+          description: Total losses
+        scoresFor:
+          type: integer
+          description: Total goals scored
+        scoresAgainst:
+          type: integer
+          description: Total goals conceded
+        points:
+          type: integer
+          description: Total points
+        promotion:
+          type: string
+          description: Promotion or resegnation if the season is over
+          readOnly: true
+    Odds:
+      required:
+      - eventId
+      - markets
+      type: object
+      properties:
+        eventId:
+          type: integer
+          description: Match unique id
+        markets:
+          type: array
+          description: Available markets for current match
+          items:
+            $ref: '#/components/schemas/OddsMarket'
+    OddsMarket:
+      required:
+      - choices
+      - id
+      - marketId
+      - marketName
+      type: object
+      properties:
+        choices:
+          type: array
+          description: Available choices for current market
+          items:
+            $ref: '#/components/schemas/OddsChoice'
+        id:
+          type: integer
+          description: Market unique id
+        marketName:
+          type: string
+          description: Name of the market odds
+          readOnly: true
+          example: "Full time, "
+        choiceGroup:
+          type: string
+          description: Group of the market odds
+          optional: true
+          readOnly: true
+          example: "Number of goals: 0.5, 1.5, 2 etc"
+        marketId:
+          type: integer
+          description: Id for market category
+    OddsChoice:
+      required:
+      - fractionalValue
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the odds choice
+          readOnly: true
+          example: "X1, 1, 2, X2, +1.5"
+        fractionalValue:
+          type: string
+          description: Fractional value of the choice
+          readOnly: true
+          example: 73/100
+  responses:
+    ParseError:
+      description: When a mask can't be parsed
+      content: {}
+    MaskError:
+      description: When any error occurs on mask
+      content: {}
+x-original-swagger-version: "2.0"

@@ -23,6 +23,7 @@ def get_odds_api_model(api):
     'choices': fields.List(fields.Nested(_odds_choice_model), required=True, description='Available choices for current market'),
     'id': fields.Integer(required=True, description='Market unique id'),
     'marketName': fields.String(readonly=True, required=True, description='Name of the market odds', example="Full time, "),
+    'choiceGroup': fields.String(readonly=True, required=False, description='Group of the market odds', example="Number of goals: 0.5, 1.5, 2 etc"),
     'marketId': fields.Integer(required=True, description='Id for market category'),
   })
   

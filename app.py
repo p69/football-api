@@ -8,6 +8,7 @@ from flask_restx import Resource
 from sofascore.match_info import getMatchInfo
 from sofascore.match_odds import get_odds_api_model, getMatchOdds
 from sofascore.livescore_news import getLatestNews
+from sofascore.espn_news import getLatestESPNNews
 from flask_caching import Cache
 
 app = Flask(__name__)
@@ -107,50 +108,11 @@ class LeagueNews(Resource):
     @league_ns.doc(params={'league_name': {'description': 'Name of the football league',
                                            'enum': allowed_league_names,
                                            'required': True}})    
-    @league_ns.expect(parser)
+    # @league_ns.expect(parser)
     def get(self, league_name):
         league = FootballLeague.from_string(league_name.upper())
         if league is None:
             api.abort(400, "Bad Request")
 
-        full_json = fetch_all_news_for_league(league)
-
-        args = parser.parse_args()
-        team_name = args.get('team')
-        page = args.get('page')
-        page_size = args.get('page_size')
-
-        # Filter by team name if provided
-        filtered_json = []
-        if team_name:
-            team_name = team_name.lower()
-            
-             #[item for item in full_json if item['home']['name'].lower() == team_name or item['away']['name'].lower() == team_name]
-            for item in full_json:
-                if item['home']['name'].lower() == team_name:
-                  filtered_json.extend(item['home_team_news'])
-                if item['away']['name'].lower() == team_name:
-                  filtered_json.extend(item['away_team_news'])
-        else:
-            filtered_json = full_json
-
-         # Calculate total pages
-        total_items = len(filtered_json)        
-        total_pages = (total_items + page_size - 1) // page_size
-        print(f"Total items: {total_items}")
-        print(f"Total pages: {total_pages}")
-        
-        # Pagination logic
-        start = (page - 1) * page_size
-        end = start + page_size
-        paged_json = filtered_json[start:end]
-
-        if not paged_json:
-            api.abort(404, f"No news available for page {page}.")
-
-        return {
-            "total_pages": total_pages,
-            "current_page": page,
-            "page_size": page_size,
-            "data": paged_json
-        }
+        full_json = getLatestESPNNews(league)
+        return full_json
