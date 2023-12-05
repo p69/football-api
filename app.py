@@ -5,10 +5,11 @@ from sofascore.next_matches import getUpcomingMatches
 from flask import Flask, request
 from flask_restx import Api, Namespace, fields, reqparse
 from flask_restx import Resource
-from sofascore.match_info import getMatchInfo
+from sofascore.match_info import getMatchInfo, get_match_info_api_model
 from sofascore.match_odds import get_odds_api_model, getMatchOdds
 from sofascore.livescore_news import getLatestNews
 from sofascore.espn_news import getLatestESPNNews
+from sofascore.team_players_stats import fetchTeamPlayerStats, get_team_players_api_model
 from flask_caching import Cache
 
 app = Flask(__name__)
@@ -26,42 +27,18 @@ api = Api(app, version='1.0', title='My simple football API', description='Get u
 
 match_ns = Namespace('match', description='Match related operations')
 league_ns = Namespace('league', description='Leagues related operations')
+teams_ns = Namespace('team', description='Information about teams. Stats and more')
+
 api.add_namespace(match_ns, path='/match')
 api.add_namespace(league_ns, path='/league')
+api.add_namespace(teams_ns, path='/team')
 
 
-standing_team_model = api.model('StandingTeam', {
-    'name': fields.String(readonly=True, description='Team name'),
-    'position': fields.Integer(required=True, description='Team position in the table'),
-    'matches': fields.Integer(required=True, description='Total matches played'),
-    'wins': fields.Integer(required=True, description='Total wins'),
-    'draws': fields.Integer(required=True, description='Total draws'),
-    'losses': fields.Integer(required=True, description='Total losses'),
-    'scoresFor': fields.Integer(required=True, description='Total goals scored'),
-    'scoresAgainst': fields.Integer(required=True, description='Total goals conceded'),
-    'points': fields.Integer(required=True, description='Total points'),
-    'promotion': fields.String(readonly=True, optional=True, description='Promotion or resegnation if the season is over')
-})
 
-team_model = api.model('Team', {
-    'id': fields.Integer(readonly=True, description='The team identifier'),
-    'name': fields.String(required=True, description='Full team name'),
-    'manager': fields.String(required=True, description='Name of the manager'),
-    'lineup': fields.String(required=True, description='Lineup for current match. Will be "Not Available" if its not available yet'),
-    'form': fields.String(required=True, description='Latets results for current team across all tournaments')
-})
-
-match_model = api.model('Match', {
-    'id': fields.Integer(readonly=True, description='The match identifier'),
-    'date': fields.String(required=True, description='Match start date in format "YYYY-MM-DD"'),
-    'match_name': fields.String(required=True, description='Match name'),
-    'home_team': fields.Nested(team_model, required=True, description="Information about home team"),
-    'away_team': fields.Nested(team_model, required=True, description="Information about away team"),
-    'h2h_results': fields.String(required=True, description='Head to Head results for current teams across all tournaments'),
-    'standings': fields.List(fields.Nested(standing_team_model), required=True, description='Teams standing in the league')
-})
 
 odds_model = get_odds_api_model(api)
+match_model = get_match_info_api_model(api)
+team_players_model = get_team_players_api_model(api)
 
 allowed_league_names = [league.name.lower() for league in FootballLeague]
 
@@ -116,3 +93,13 @@ class LeagueNews(Resource):
 
         full_json = getLatestESPNNews(league)
         return full_json
+    
+
+@teams_ns.route('/<int:id>/players_stats')
+@teams_ns.param('id', 'The team identifier')
+class TeamPlayersInfo(Resource):
+    @match_ns.doc('Get team players info')
+    @match_ns.marshal_with(team_players_model)
+    def get(self, id):
+        players_stats_json = fetchTeamPlayerStats(id)
+        return players_stats_json

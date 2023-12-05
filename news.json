@@ -1,0 +1,475 @@
+{
+  "data": {
+    "uniqueTournamentSeasons": [
+      {
+        "uniqueTournament": {
+          "name": "Premier League",
+          "slug": "premier-league",
+          "primaryColorHex": "#3c1c5a",
+          "secondaryColorHex": "#f80158",
+          "category": {
+            "name": "England",
+            "slug": "england",
+            "sport": {
+              "name": "Football",
+              "slug": "football",
+              "id": 1
+            },
+            "id": 1,
+            "flag": "england",
+            "alpha2": "EN"
+          },
+          "userCount": 1369318,
+          "id": 17,
+          "displayInverseHomeAwayTeams": false
+        },
+        "seasons": [
+          {
+            "name": "Premier League 23/24",
+            "year": "23/24",
+            "editor": false,
+            "id": 52186
+          },
+          {
+            "name": "Premier League 22/23",
+            "year": "22/23",
+            "editor": false,
+            "seasonCoverageInfo": {},
+            "id": 41886
+          },
+          {
+            "name": "Premier League 21/22",
+            "year": "21/22",
+            "editor": false,
+            "id": 37036
+          },
+          {
+            "name": "Premier League 20/21",
+            "year": "20/21",
+            "editor": false,
+            "id": 29415
+          },
+          {
+            "name": "Premier League 19/20",
+            "year": "19/20",
+            "editor": false,
+            "id": 23776
+          },
+          {
+            "name": "Premier League 18/19",
+            "year": "18/19",
+            "editor": false,
+            "id": 17359
+          },
+          {
+            "name": "Premier League 17/18",
+            "year": "17/18",
+            "editor": false,
+            "id": 13380
+          },
+          {
+            "name": "Premier League 16/17",
+            "year": "16/17",
+            "editor": false,
+            "id": 11733
+          },
+          {
+            "name": "Premier League 15/16",
+            "year": "15/16",
+            "editor": false,
+            "id": 10356
+          }
+        ]
+      },
+      {
+        "uniqueTournament": {
+          "name": "EFL Cup",
+          "slug": "efl-cup",
+          "primaryColorHex": "#203e93",
+          "secondaryColorHex": "#bc1723",
+          "category": {
+            "name": "England",
+            "slug": "england",
+            "sport": {
+              "name": "Football",
+              "slug": "football",
+              "id": 1
+            },
+            "id": 1,
+            "flag": "england",
+            "alpha2": "EN"
+          },
+          "userCount": 168147,
+          "id": 21,
+          "displayInverseHomeAwayTeams": false
+        },
+        "seasons": [
+          {
+            "name": "EFL Cup 23/24",
+            "year": "23/24",
+            "editor": false,
+            "id": 52393
+          },
+          {
+            "name": "EFL Cup 22/23",
+            "year": "22/23",
+            "editor": false,
+            "id": 42443
+          },
+          {
+            "name": "EFL Cup 21/22",
+            "year": "21/22",
+            "editor": false,
+            "id": 37177
+          },
+          {
+            "name": "EFL Cup 20/21",
+            "year": "20/21",
+            "editor": false,
+            "id": 29404
+          },
+          {
+            "name": "EFL Cup 19/20",
+            "year": "19/20",
+            "editor": false,
+            "id": 24004
+          }
+        ]
+      },
+      {
+        "uniqueTournament": {
+          "name": "UEFA Champions League",
+          "slug": "uefa-champions-league",
+          "primaryColorHex": "#062b5c",
+          "secondaryColorHex": "#086aab",
+          "category": {
+            "name": "Europe",
+            "slug": "europe",
+            "sport": {
+              "name": "Football",
+              "slug": "football",
+              "id": 1
+            },
+            "id": 1465,
+            "flag": "europe"
+          },
+          "userCount": 1305994,
+          "id": 7,
+          "displayInverseHomeAwayTeams": false
+        },
+        "seasons": [
+          {
+            "name": "UEFA Champions League 23/24",
+            "year": "23/24",
+            "editor": false,
+            "seasonCoverageInfo": {},
+            "id": 52162
+          },
+          {
+            "name": "UEFA Champions League 16/17",
+            "year": "16/17",
+            "editor": false,
+            "id": 11773
+          },
+          {
+            "name": "UEFA Champions League 15/16",
+            "year": "15/16",
+            "editor": false,
+            "id": 10390
+          }
+        ]
+      },
+      {
+        "uniqueTournament": {
+          "name": "Community Shield",
+          "slug": "community-shield",
+          "primaryColorHex": "#e4051f",
+          "secondaryColorHex": "#949fa4",
+          "category": {
+            "name": "England",
+            "slug": "england",
+            "sport": {
+              "name": "Football",
+              "slug": "football",
+              "id": 1
+            },
+            "id": 1,
+            "flag": "england",
+            "alpha2": "EN"
+          },
+          "userCount": 41477,
+          "id": 346,
+          "displayInverseHomeAwayTeams": false
+        },
+        "seasons": [
+          {
+            "name": "Community Shield 2023",
+            "year": "2023",
+            "editor": false,
+            "id": 53261
+          },
+          {
+            "name": "Community Shield 2020",
+            "year": "2020",
+            "editor": false,
+            "id": 29373
+          },
+          {
+            "name": "Community Shield 2017",
+            "year": "2017",
+            "editor": false,
+            "id": 13386
+          }
+        ]
+      },
+      {
+        "uniqueTournament": {
+          "name": "Emirates Cup",
+          "slug": "emirates-cup",
+          "primaryColorHex": "#67848f",
+          "secondaryColorHex": "#66838e",
+          "category": {
+            "name": "World",
+            "slug": "world",
+            "sport": {
+              "name": "Football",
+              "slug": "football",
+              "id": 1
+            },
+            "id": 1468,
+            "flag": "international"
+          },
+          "userCount": 6625,
+          "id": 1295,
+          "displayInverseHomeAwayTeams": false
+        },
+        "seasons": [
+          {
+            "name": "Emirates Cup 2023",
+            "year": "2023",
+            "editor": false,
+            "id": 52707
+          },
+          {
+            "name": "Emirates Cup 2022",
+            "year": "2022",
+            "editor": false,
+            "id": 41859
+          },
+          {
+            "name": "Emirates Cup 2019",
+            "year": "2019",
+            "editor": false,
+            "id": 23671
+          },
+          {
+            "name": "Emirates Cup 2017",
+            "year": "2017",
+            "editor": false,
+            "id": 13654
+          }
+        ]
+      },
+      {
+        "uniqueTournament": {
+          "name": "MLS All Star Game",
+          "slug": "mls-all-star-game",
+          "primaryColorHex": "#e2231a",
+          "secondaryColorHex": "#062f69",
+          "category": {
+            "name": "USA",
+            "slug": "usa",
+            "sport": {
+              "name": "Football",
+              "slug": "football",
+              "id": 1
+            },
+            "id": 26,
+            "flag": "usa",
+            "alpha2": "US"
+          },
+          "userCount": 4186,
+          "id": 1794,
+          "displayInverseHomeAwayTeams": false
+        },
+        "seasons": [
+          {
+            "name": "MLS All-Star Game 2023",
+            "year": "2023",
+            "editor": false,
+            "id": 51711
+          },
+          {
+            "name": "MLS All Star Game 2016",
+            "year": "2016",
+            "editor": false,
+            "id": 11820
+          }
+        ]
+      },
+      {
+        "uniqueTournament": {
+          "name": "UEFA Europa League",
+          "slug": "uefa-europa-league",
+          "secondaryColorHex": "#f37d25",
+          "category": {
+            "name": "Europe",
+            "slug": "europe",
+            "sport": {
+              "name": "Football",
+              "slug": "football",
+              "id": 1
+            },
+            "id": 1465,
+            "flag": "europe"
+          },
+          "userCount": 618074,
+          "id": 679,
+          "displayInverseHomeAwayTeams": false
+        },
+        "seasons": [
+          {
+            "name": "UEFA Europa League 22/23",
+            "year": "22/23",
+            "editor": false,
+            "seasonCoverageInfo": {},
+            "id": 44509
+          },
+          {
+            "name": "UEFA Europa League 20/21",
+            "year": "20/21",
+            "editor": false,
+            "id": 29343
+          },
+          {
+            "name": "UEFA Europa League 19/20",
+            "year": "19/20",
+            "editor": false,
+            "id": 23755
+          },
+          {
+            "name": "UEFA Europa League 18/19",
+            "year": "18/19",
+            "editor": false,
+            "id": 17352
+          },
+          {
+            "name": "UEFA Europa League 17/18",
+            "year": "17/18",
+            "editor": false,
+            "id": 13416
+          }
+        ]
+      }
+    ],
+    "typesMap": {
+      "7": {
+        "10390": [
+          "overall"
+        ],
+        "11773": [
+          "overall"
+        ],
+        "52162": [
+          "overall"
+        ]
+      },
+      "17": {
+        "10356": [
+          "overall"
+        ],
+        "11733": [
+          "overall"
+        ],
+        "13380": [
+          "overall"
+        ],
+        "17359": [
+          "overall"
+        ],
+        "23776": [
+          "overall"
+        ],
+        "29415": [
+          "overall"
+        ],
+        "37036": [
+          "overall"
+        ],
+        "41886": [
+          "overall"
+        ],
+        "52186": [
+          "overall"
+        ]
+      },
+      "21": {
+        "24004": [
+          "overall"
+        ],
+        "29404": [
+          "overall"
+        ],
+        "37177": [
+          "overall"
+        ],
+        "42443": [
+          "overall"
+        ],
+        "52393": [
+          "overall"
+        ]
+      },
+      "346": {
+        "13386": [
+          "overall"
+        ],
+        "29373": [
+          "overall"
+        ],
+        "53261": [
+          "overall"
+        ]
+      },
+      "679": {
+        "13416": [
+          "overall"
+        ],
+        "17352": [
+          "overall"
+        ],
+        "23755": [
+          "overall"
+        ],
+        "29343": [
+          "overall"
+        ],
+        "44509": [
+          "overall"
+        ]
+      },
+      "1295": {
+        "13654": [
+          "overall"
+        ],
+        "23671": [
+          "overall"
+        ],
+        "41859": [
+          "overall"
+        ],
+        "52707": [
+          "overall"
+        ]
+      },
+      "1794": {
+        "11820": [
+          "overall"
+        ],
+        "51711": [
+          "overall"
+        ]
+      }
+    }
+  }
+}

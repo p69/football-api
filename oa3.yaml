@@ -33,6 +33,18 @@ paths:
           - france
           - champions_league
           - europa_league
+          - dutch_eredivisie
+          - austria
+          - switzerland
+          - belgium
+          - denmark
+          - norway
+          - poland
+          - ireland
+          - romania
+          - scotland
+          - sweden
+          - turkey
       - name: team
         in: query
         description: Name of the team for the news
@@ -77,6 +89,18 @@ paths:
           - france
           - champions_league
           - europa_league
+          - dutch_eredivisie
+          - austria
+          - switzerland
+          - belgium
+          - denmark
+          - norway
+          - poland
+          - ireland
+          - romania
+          - scotland
+          - sweden
+          - turkey
       responses:
         "200":
           description: Success
