@@ -7,14 +7,8 @@ from utils.datetime import timestampToDate
 _team_players_stats_url_format = "https://sofascores.p.rapidapi.com/v1/teams/player-statistics/result?season_id={}&unique_tournament_id={}&team_id={}"
 _team_seasons_url_format = "https://sofascores.p.rapidapi.com/v1/teams/statistics/seasons?team_id={}"
 
-_team_players_stats_model = None
-
 
 def get_team_players_api_model(api):
-    global _team_players_stats_model
-    if _team_players_stats_model != None:
-        return _team_players_stats_model
-
     statistics_model = api.model('Statistics', {
         'rating': fields.Float(description='Player rating'),
         'id': fields.Integer(description='Statistics ID'),
@@ -329,7 +323,7 @@ def get_team_players_api_model(api):
         'player': fields.Nested(player_model, description='Player information')
     })
 
-    _team_players_stats_model = api.model('TeamPlayerStats', {
+    return api.model('TeamPlayerStats', {
         'rating': fields.List(fields.Nested(rating_model), description='List of player ratings'),
         'goals': fields.List(fields.Nested(goals_model), description='List of player goals'),
         'expectedGoals': fields.List(fields.Nested(expected_goals_model), description='List of player expected goals'),
@@ -354,8 +348,6 @@ def get_team_players_api_model(api):
         'yellowCards': fields.List(fields.Nested(yellow_cards_model), description='List of player yellow cards'),
         'redCards': fields.List(fields.Nested(red_cards_model), description='List of player red cards')
     })
-
-    return _team_players_stats_model
 
 
 def _get_season_info(team_id):

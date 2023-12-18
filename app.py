@@ -1,7 +1,7 @@
 from dotenv import load_dotenv
 load_dotenv()
 from sofascore.leagues import FootballLeague
-from sofascore.next_matches import getUpcomingMatches
+from sofascore.next_matches import getUpcomingMatches, get_upcoming_match_model
 from flask import Flask, request
 from flask_restx import Api, Namespace, fields, reqparse
 from flask_restx import Resource
@@ -41,6 +41,7 @@ odds_model = get_odds_api_model(api)
 match_model = get_match_info_api_model(api)
 team_players_model = get_team_players_api_model(api)
 standing_team_model = get_standings_team_model(api)
+upcoming_match_model = get_upcoming_match_model(api)
 
 allowed_league_names = [league.name.lower() for league in FootballLeague]
 
@@ -66,7 +67,7 @@ class UpcomingMatches(Resource):
     @league_ns.doc(params={'league_name': {'description': 'Name of the football league',
                                            'enum': allowed_league_names,
                                            'required': True}})
-    
+    @league_ns.marshal_with(upcoming_match_model, as_list=True)
     def get(self, league_name):
         league = FootballLeague.from_string(league_name.upper())
         if league is None:

@@ -33,14 +33,8 @@ def getLeagueStandings(league:FootballLeague):
 
   return standings
 
-_standing_team_model = None
-
-def get_standings_team_model(api):
-   global _standing_team_model
-   if _standing_team_model != None:
-      return _standing_team_model
-   
-   _standing_team_model = api.model('StandingTeam', {
+def get_standings_team_model(api):   
+   return api.model('StandingTeam', {
       'team': fields.String(readonly=True, description='Team name'),
       'position': fields.Integer(required=True, description='Team position in the table'),
       'matches': fields.Integer(required=True, description='Total matches played'),
@@ -52,5 +46,3 @@ def get_standings_team_model(api):
       'points': fields.Integer(required=True, description='Total points'),
       'promotion': fields.String(readonly=True, optional=True, description='Promotion or resegnation if the season is over')
    })
-
-   return _standing_team_model

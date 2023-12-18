@@ -142,13 +142,7 @@ def getMatchInfo(event_id):
      "h2h_results": h2hResults
   }
 
-_match_info_model = None
-
 def get_match_info_api_model(api):
-   global _match_info_model
-   if _match_info_model != None:
-      return _match_info_model
-
    overall_statistics_model = api.model('OverallStatistics', {
       'goalsScored': fields.Integer(description='Number of goals scored'),
       'goalsConceded': fields.Integer(description='Number of goals conceded'),
@@ -275,7 +269,7 @@ def get_match_info_api_model(api):
       'overallStatistics': fields.Nested(overall_statistics_model, description='Overall statistics of the team')
    })
 
-   _match_info_model = api.model('Match', {
+   return api.model('Match', {
       'id': fields.Integer(readonly=True, description='The match identifier'),
       'date': fields.String(required=True, description='Match start date in format "YYYY-MM-DD"'),
       'match_name': fields.String(required=True, description='Match name'),
@@ -283,5 +277,3 @@ def get_match_info_api_model(api):
       'away_team': fields.Nested(team_model, required=True, description="Information about away team"),
       'h2h_results': fields.String(required=True, description='Head to Head results for current teams across all tournaments'),
    })
-
-   return _match_info_model
