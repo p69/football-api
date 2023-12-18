@@ -11,6 +11,7 @@ from sofascore.livescore_news import getLatestNews
 from sofascore.espn_news import getLatestESPNNews
 from sofascore.team_players_stats import fetchTeamPlayerStats, get_team_players_api_model
 from flask_caching import Cache
+from sofascore.league_standings import get_standings_team_model, getLeagueStandings
 
 app = Flask(__name__)
 
@@ -39,6 +40,7 @@ api.add_namespace(teams_ns, path='/team')
 odds_model = get_odds_api_model(api)
 match_model = get_match_info_api_model(api)
 team_players_model = get_team_players_api_model(api)
+standing_team_model = get_standings_team_model(api)
 
 allowed_league_names = [league.name.lower() for league in FootballLeague]
 
@@ -64,11 +66,25 @@ class UpcomingMatches(Resource):
     @league_ns.doc(params={'league_name': {'description': 'Name of the football league',
                                            'enum': allowed_league_names,
                                            'required': True}})
+    
     def get(self, league_name):
         league = FootballLeague.from_string(league_name.upper())
         if league is None:
             api.abort(400, "Bad Request")
         result = getUpcomingMatches(league)
+        return result
+    
+@league_ns.route('/<string:league_name>/standings')
+class LeagueStandings(Resource):
+    @league_ns.doc(params={'league_name': {'description': 'Name of the football league',
+                                           'enum': allowed_league_names,
+                                           'required': True}})
+    @league_ns.marshal_with(standing_team_model, as_list=True)
+    def get(self, league_name):
+        league = FootballLeague.from_string(league_name.upper())
+        if league is None:
+            api.abort(400, "Bad Request")
+        result = getLeagueStandings(league)
         return result
     
 

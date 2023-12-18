@@ -6,7 +6,6 @@ from utils.datetime import timestampToDate
 
 _event_url_template = "https://sofascores.p.rapidapi.com/v1/events/data?event_id={}"
 _lineups_url_template = "https://sofascores.p.rapidapi.com/v1/events/lineups?event_id={}"
-_standings_url_format = "https://sofascores.p.rapidapi.com/v1/seasons/standings?standing_type=total&unique_tournament_id={}&seasons_id={}"
 _team_form_url_format = "https://sofascores.p.rapidapi.com/v1/teams/recent-form?team_id={}"
 _h2h_events_url_format = "https://sofascores.p.rapidapi.com/v1/events/h2h-events?custom_event_id={}"
 _team_stats_url_format = "https://sofascores.p.rapidapi.com/v1/teams/statistics/result?season_id={}&unique_tournament_id={}&team_id={}"
@@ -93,32 +92,6 @@ def fetchLineups(event_id):
       'away': awayLineup
    }
 
-def fetchTableStandings(season):
-  web_url = _standings_url_format.format(season['tournament'], season['id'])
-  response = requests.get(web_url, headers=headers)
-  json = response.json()
-  # Extract the relevant data
-  standings = []
-  
-  for row in json['data'][0]['rows']:
-     team = row['team']['name']
-     standing = {
-        'team': team,
-        'position': row['position'],
-        'matches': row['matches'],
-        'wins': row['wins'],
-        'draws': row['draws'],
-        'losses': row['losses'],
-        'scoresFor': row['scoresFor'],
-        'scoresAgainst': row['scoresAgainst'],
-        'points': row['points']
-     }
-     if 'promotion' in row:
-        standing['promotion'] = row['promotion']['text']
-     standings.append(standing)     
-
-  return standings
-
 def fetchForm(team):
    web_url = _team_form_url_format.format(team['id'])
    response = requests.get(web_url, headers=headers)
@@ -153,9 +126,6 @@ def getMatchInfo(event_id):
   awayTeam['lineup'] = lineups['away']
   homeTeam['form'] = fetchForm(homeTeam)
   awayTeam['form'] = fetchForm(awayTeam)
-  print('Fetching Standings')
-  standings = fetchTableStandings(matchInfo['season'])
-  print("Success")
   print('Fetching H2H')
   h2hResults = "Not Available"
   if matchInfo['customId'] != "":
@@ -169,7 +139,6 @@ def getMatchInfo(event_id):
      "date": matchInfo['date'],
      "home_team": homeTeam,
      "away_team": awayTeam,
-     "standings": standings,
      "h2h_results": h2hResults
   }
 
@@ -179,19 +148,6 @@ def get_match_info_api_model(api):
    global _match_info_model
    if _match_info_model != None:
       return _match_info_model
-   
-   standing_team_model = api.model('StandingTeam', {
-      'name': fields.String(readonly=True, description='Team name'),
-      'position': fields.Integer(required=True, description='Team position in the table'),
-      'matches': fields.Integer(required=True, description='Total matches played'),
-      'wins': fields.Integer(required=True, description='Total wins'),
-      'draws': fields.Integer(required=True, description='Total draws'),
-      'losses': fields.Integer(required=True, description='Total losses'),
-      'scoresFor': fields.Integer(required=True, description='Total goals scored'),
-      'scoresAgainst': fields.Integer(required=True, description='Total goals conceded'),
-      'points': fields.Integer(required=True, description='Total points'),
-      'promotion': fields.String(readonly=True, optional=True, description='Promotion or resegnation if the season is over')
-   })   
 
    overall_statistics_model = api.model('OverallStatistics', {
       'goalsScored': fields.Integer(description='Number of goals scored'),
@@ -326,7 +282,6 @@ def get_match_info_api_model(api):
       'home_team': fields.Nested(team_model, required=True, description="Information about home team"),
       'away_team': fields.Nested(team_model, required=True, description="Information about away team"),
       'h2h_results': fields.String(required=True, description='Head to Head results for current teams across all tournaments'),
-      'standings': fields.List(fields.Nested(standing_team_model), required=True, description='Teams standing in the league'),      
    })
 
    return _match_info_model
