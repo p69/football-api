@@ -7,8 +7,7 @@ from flask_restx import Api, Namespace, fields, reqparse
 from flask_restx import Resource
 from sofascore.match_info import getMatchInfo, get_match_info_api_model
 from sofascore.match_odds import get_odds_api_model, getMatchOdds
-from sofascore.livescore_news import getLatestNews
-from sofascore.espn_news import getLatestESPNNews
+from sofascore.sofascore_news import get_sofascore_news_model, getLatestNewsForTeam
 from sofascore.team_players_stats import fetchTeamPlayerStats, get_team_players_api_model
 from flask_caching import Cache
 from sofascore.league_standings import get_standings_team_model, getLeagueStandings
@@ -42,6 +41,7 @@ match_model = get_match_info_api_model(api)
 team_players_model = get_team_players_api_model(api)
 standing_team_model = get_standings_team_model(api)
 upcoming_match_model = get_upcoming_match_model(api)
+team_news_model = get_sofascore_news_model(api)
 
 allowed_league_names = [league.name.lower() for league in FootballLeague]
 
@@ -89,26 +89,13 @@ class LeagueStandings(Resource):
         return result
     
 
-def make_cache_key(*args, **kwargs):
-    return request.path
-
-@cache.cached(timeout=3600, key_prefix=make_cache_key)
-def fetch_all_news_for_league(league:FootballLeague):
-    return getLatestNews(league)
-
-
-@league_ns.route('/<string:league_name>/news')
-class LeagueNews(Resource):
-    @league_ns.doc(params={'league_name': {'description': 'Name of the football league',
-                                           'enum': allowed_league_names,
-                                           'required': True}})    
-    # @league_ns.expect(parser)
-    def get(self, league_name):
-        league = FootballLeague.from_string(league_name.upper())
-        if league is None:
-            api.abort(400, "Bad Request")
-
-        full_json = getLatestESPNNews(league)
+@teams_ns.route('/<int:id>/news')
+@teams_ns.param('id', 'The team identifier')
+class TeamNews(Resource):
+    @teams_ns.doc('Get latest news for the team')    
+    @teams_ns.marshal_with(team_news_model)
+    def get(self, id):
+        full_json = getLatestNewsForTeam(id)
         return full_json
     
 
