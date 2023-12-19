@@ -8,18 +8,18 @@ def get_odds_api_model(api):
     'fractionalValue': fields.String(readonly=True, required=True, description='Fractional value of the choice', example="73/100")
   })
 
-  odds_market_model = api.model('OddsMarket', {
+  return api.model('OddsMarket', {
     'choices': fields.List(fields.Nested(odds_choice_model), required=True, description='Available choices for current market'),
     'id': fields.Integer(required=True, description='Market unique id'),
     'marketName': fields.String(readonly=True, required=True, description='Name of the market odds', example="Full time, "),
-    'choiceGroup': fields.String(readonly=True, required=False, description='Group of the market odds', example="Number of goals: 0.5, 1.5, 2 etc"),
+    # 'choiceGroup': fields.String(readonly=True, required=False, description='Group of the market odds', example="Number of goals: 0.5, 1.5, 2 etc"),
     'marketId': fields.Integer(required=True, description='Id for market category'),
   })
   
-  return api.model('Odds', {
-    'eventId': fields.Integer(required=True, description='Match unique id'),
-    'markets': fields.List(fields.Nested(odds_market_model), required=True, description='Available markets for current match'),
-  })
+  # return api.model('Odds', {
+  #   'id': fields.Integer(required=True, description='Match unique id'),
+  #   'markets': fields.List(fields.Nested(odds_market_model), required=True, description='Available markets for current match'),
+  # })
 
 _odds_url_template = "https://sofascores.p.rapidapi.com/v1/events/odds/all?event_id={}&odds_format=decimal&provider_id=1"
 

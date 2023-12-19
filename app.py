@@ -57,7 +57,7 @@ class MatchInfo(Resource):
 @match_ns.route('/odds/<int:id>')
 class MatchOdds(Resource):
     @match_ns.doc('Get match odds')
-    @match_ns.marshal_with(odds_model)
+    @match_ns.marshal_with(odds_model, as_list=True)
     def get(self, id):
         match_odds_json = getMatchOdds(id)
         return match_odds_json
