@@ -4,13 +4,13 @@
       {
         "appID": "com.imperto.ramishare.pashxa",
         "components": {
-          "/": "/accept"
+          "/": "accept"
         }        
       },
       {
         "appID": "com.imperto.internal.pashxa",
         "components": {
-          "/": "/accept"
+          "/": "accept"
         }
       }
     ]
