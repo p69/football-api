@@ -4,15 +4,15 @@
     "details": [
       {
         "appID": "com.imperto.ramishare.pashxa",
-        "paths": [
-          "/accept"
-        ]
+        "components": {
+          "/": "/accept"
+        }        
       },
       {
         "appID": "com.imperto.internal.pashxa",
-        "paths": [
-          "/accept"
-        ]
+        "components": {
+          "/": "/accept"
+        }
       }
     ]
   }
