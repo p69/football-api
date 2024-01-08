@@ -8,6 +8,12 @@
         }        
       },
       {
+        "appIDs": ["C9FSBRCTY8.com.imperto.ramishare.test.pashxa"],
+        "components": {
+          "/": "accept"
+        }        
+      },
+      {
         "appID": "C9FSBRCTY8.com.imperto.internal.pashxa",
         "components": {
           "/": "accept"
