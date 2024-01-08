@@ -4,7 +4,7 @@
       {
         "appID": "com.imperto.ramishare.pashxa",
         "components": {
-          "/": "accept"
+          "/": "*"
         }        
       },
       {
