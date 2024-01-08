@@ -1,0 +1,77 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "com.imperto.ramishare.pashxa",
+        "paths": [
+          "/accept",
+          "NOT *"
+        ]
+      },
+      {
+        "appID": "com.imperto.internal.pashxa",
+        "paths": [
+          "/accept",
+          "NOT *"
+        ]
+      },
+      {
+        "appID": "com.imperto.loxam",
+        "paths": [
+          "/accept",
+          "NOT *"
+        ]
+      },
+      {
+        "appID": "com.imperto.loxam.internal",
+        "paths": [
+          "/accept",
+          "NOT *"
+        ]
+      },
+      {
+        "appID": "com.imperto.riwal",
+        "paths": [
+          "/accept",
+          "NOT *"
+        ]
+      },
+      {
+        "appID": "com.imperto.riwal.internal",
+        "paths": [
+          "/accept",
+          "NOT *"
+        ]
+      },
+      {
+        "appID": "com.imperto.eu.default",
+        "paths": [
+          "/accept",
+          "NOT *"
+        ]
+      },
+      {
+        "appID": "com.imperto.internal.default",
+        "paths": [
+          "/accept",
+          "NOT *"
+        ]
+      },
+      {
+        "appID": "com.imperto.rentalplus",
+        "paths": [
+          "/accept",
+          "NOT *"
+        ]
+      },
+      {
+        "appID": "com.imperto.rentalplus.internal",
+        "paths": [
+          "/accept",
+          "NOT *"
+        ]
+      }
+    ]
+  }
+}

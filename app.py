@@ -2,7 +2,7 @@ from dotenv import load_dotenv
 load_dotenv()
 from sofascore.leagues import FootballLeague
 from sofascore.next_matches import getUpcomingMatches, get_upcoming_match_model
-from flask import Flask, request
+from flask import Flask, request, send_from_directory
 from flask_restx import Api, Namespace, fields, reqparse
 from flask_restx import Resource
 from sofascore.match_info import getMatchInfo, get_match_info_api_model
@@ -11,6 +11,7 @@ from sofascore.sofascore_news import get_sofascore_news_model, getLatestNewsForT
 from sofascore.team_players_stats import fetchTeamPlayerStats, get_team_players_api_model
 from flask_caching import Cache
 from sofascore.league_standings import get_standings_team_model, getLeagueStandings
+from sofascore.team_recent_matches import fetchTeamRecentEventsStats
 
 app = Flask(__name__)
 
@@ -107,3 +108,17 @@ class TeamPlayersInfo(Resource):
     def get(self, id):
         players_stats_json = fetchTeamPlayerStats(id)
         return players_stats_json
+
+@teams_ns.route('/<int:id>/recent_matches')
+@teams_ns.param('id', 'The team identifier')
+class TeamRecentMatchesStats(Resource):
+    @match_ns.doc('Get team recent matches detailed statistics')
+    # @match_ns.marshal_with(team_players_model)
+    def get(self, id):
+        result = fetchTeamRecentEventsStats(id)
+        return result
+
+
+@app.route('/.well-known/apple-app-site-association')
+def serve_apple_app_site_association():
+    return send_from_directory('static', 'apple_associate.json', as_attachment=False)
