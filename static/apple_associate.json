@@ -18,6 +18,12 @@
         "components": {
           "/": "accept"
         }
+      },
+      {
+        "appID": "C9FSBRCTY8.hhs.ULTest",
+        "components": {
+          "/": "details"
+        }
       }
     ]
   }
