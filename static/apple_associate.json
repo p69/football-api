@@ -1,7 +1,14 @@
 {
   "applinks": {    
     "details": [
-      
+      {
+        "appID": "C9FSBRCTY8.com.imperto.ramishare.pashxa",
+        "components": [
+          {
+            "/": "/accept/*"
+          }
+        ]        
+      },
       {
         "appIDs": ["C9FSBRCTY8.com.imperto.ramishare.test.pashxa"],
         "components": {
