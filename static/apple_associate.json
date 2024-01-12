@@ -3,9 +3,7 @@
     "details": [
       {
         "appID": "C9FSBRCTY8.com.imperto.ramishare.pashxa",
-        "components": {
-          "/": "accept"
-        }        
+        "paths": ["/accept*"]        
       },
       {
         "appIDs": ["C9FSBRCTY8.com.imperto.ramishare.test.pashxa"],
