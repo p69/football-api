@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "https://footabll-api.onrender.com/"
+      "url": "https://footabll-api.onrender.com"
     }
   ],
   "tags": [
@@ -31,6 +31,7 @@
           "league"
         ],
         "operationId": "get_league_standings",
+        "x-openai-isConsequential": false,
         "parameters": [
           {
             "name": "league_name",
@@ -60,15 +61,6 @@
                 "sweden",
                 "turkey"
               ]
-            }
-          },
-          {
-            "name": "X-Fields",
-            "in": "header",
-            "description": "An optional fields mask",
-            "schema": {
-              "type": "string",
-              "format": "mask"
             }
           }
         ],
@@ -95,6 +87,7 @@
           "league"
         ],
         "operationId": "get_upcoming_matches",
+        "x-openai-isConsequential": false,
         "parameters": [
           {
             "name": "league_name",
@@ -125,15 +118,6 @@
                 "turkey"
               ]
             }
-          },
-          {
-            "name": "X-Fields",
-            "in": "header",
-            "description": "An optional fields mask",
-            "schema": {
-              "type": "string",
-              "format": "mask"
-            }
           }
         ],
         "responses": {
@@ -159,6 +143,7 @@
           "match"
         ],
         "operationId": "Get match odds",
+        "x-openai-isConsequential": false,
         "parameters": [
           {
             "name": "id",
@@ -166,15 +151,6 @@
             "required": true,
             "schema": {
               "type": "integer"
-            }
-          },
-          {
-            "name": "X-Fields",
-            "in": "header",
-            "description": "An optional fields mask",
-            "schema": {
-              "type": "string",
-              "format": "mask"
             }
           }
         ],
@@ -184,7 +160,10 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Odds"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OddsMarket"
+                  }
                 }
               }
             }
@@ -198,6 +177,7 @@
           "match"
         ],
         "operationId": "Get match info",
+        "x-openai-isConsequential": false,
         "parameters": [
           {
             "name": "id",
@@ -206,15 +186,6 @@
             "required": true,
             "schema": {
               "type": "integer"
-            }
-          },
-          {
-            "name": "X-Fields",
-            "in": "header",
-            "description": "An optional fields mask",
-            "schema": {
-              "type": "string",
-              "format": "mask"
             }
           }
         ],
@@ -238,6 +209,7 @@
           "team"
         ],
         "operationId": "Get latest news for the team",
+        "x-openai-isConsequential": false,
         "parameters": [
           {
             "name": "id",
@@ -246,15 +218,6 @@
             "required": true,
             "schema": {
               "type": "integer"
-            }
-          },
-          {
-            "name": "X-Fields",
-            "in": "header",
-            "description": "An optional fields mask",
-            "schema": {
-              "type": "string",
-              "format": "mask"
             }
           }
         ],
@@ -278,6 +241,7 @@
           "team"
         ],
         "operationId": "Get team players info",
+        "x-openai-isConsequential": false,
         "parameters": [
           {
             "name": "id",
@@ -286,15 +250,6 @@
             "required": true,
             "schema": {
               "type": "integer"
-            }
-          },
-          {
-            "name": "X-Fields",
-            "in": "header",
-            "description": "An optional fields mask",
-            "schema": {
-              "type": "string",
-              "format": "mask"
             }
           }
         ],
@@ -305,6 +260,38 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/TeamPlayerStats"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/team/{id}/recent_matches": {
+      "get": {
+        "tags": [
+          "team"
+        ],
+        "operationId": "Get team recent matches detailed statistics",
+        "x-openai-isConsequential": false,
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The team identifier",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecentMatchModel"
                 }
               }
             }
@@ -864,26 +851,6 @@
           }
         }
       },
-      "Odds": {
-        "required": [
-          "eventId",
-          "markets"
-        ],
-        "type": "object",
-        "properties": {
-          "eventId": {
-            "type": "integer",
-            "description": "Match unique id"
-          },
-          "markets": {
-            "type": "array",
-            "description": "Available markets for current match",
-            "items": {
-              "$ref": "#/components/schemas/OddsMarket"
-            }
-          }
-        }
-      },
       "OddsMarket": {
         "required": [
           "choices",
@@ -909,12 +876,6 @@
             "description": "Name of the market odds",
             "readOnly": true,
             "example": "Full time, "
-          },
-          "choiceGroup": {
-            "type": "string",
-            "description": "Group of the market odds",
-            "readOnly": true,
-            "example": "Number of goals: 0.5, 1.5, 2 etc"
           },
           "marketId": {
             "type": "integer",
@@ -2398,6 +2359,160 @@
           "appearances": {
             "type": "integer",
             "description": "Number of appearances"
+          }
+        }
+      },
+      "RecentMatchModel": {
+        "required": [
+          "awayTeamId",
+          "awayTeamName",
+          "homeTeamId",
+          "homeTeamName",
+          "id",
+          "startDate"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Match ID"
+          },
+          "homeTeamName": {
+            "type": "string",
+            "description": "Home Team Name"
+          },
+          "homeTeamId": {
+            "type": "integer",
+            "description": "Home Team ID"
+          },
+          "awayTeamName": {
+            "type": "string",
+            "description": "Away Team Name"
+          },
+          "awayTeamId": {
+            "type": "integer",
+            "description": "Away Team ID"
+          },
+          "startDate": {
+            "type": "string",
+            "description": "Start Date"
+          },
+          "homeScore": {
+            "$ref": "#/components/schemas/ScoreModel"
+          },
+          "awayScore": {
+            "$ref": "#/components/schemas/ScoreModel"
+          },
+          "matchStatistics": {
+            "$ref": "#/components/schemas/StatisticsModel"
+          }
+        }
+      },
+      "ScoreModel": {
+        "required": [
+          "current",
+          "display",
+          "normaltime",
+          "period1",
+          "period2"
+        ],
+        "type": "object",
+        "properties": {
+          "current": {
+            "type": "integer",
+            "description": "Current score"
+          },
+          "display": {
+            "type": "integer",
+            "description": "Display score"
+          },
+          "period1": {
+            "type": "integer",
+            "description": "Score in first period"
+          },
+          "period2": {
+            "type": "integer",
+            "description": "Score in second period"
+          },
+          "normaltime": {
+            "type": "integer",
+            "description": "Score in normal time"
+          }
+        }
+      },
+      "StatisticsModel": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/StatisticsDataModel"
+          }
+        }
+      },
+      "StatisticsDataModel": {
+        "required": [
+          "period"
+        ],
+        "type": "object",
+        "properties": {
+          "period": {
+            "type": "string",
+            "description": "Period (can be 1st, 2nd or All)"
+          },
+          "groups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StatisticsGroupModel"
+            }
+          }
+        }
+      },
+      "StatisticsGroupModel": {
+        "required": [
+          "groupName"
+        ],
+        "type": "object",
+        "properties": {
+          "groupName": {
+            "type": "string",
+            "description": "Group Name"
+          },
+          "statisticsItems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StatisticsItemModel"
+            }
+          }
+        }
+      },
+      "StatisticsItemModel": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Statistic Name"
+          },
+          "home": {
+            "type": "string",
+            "description": "Home Value (string representation)"
+          },
+          "away": {
+            "type": "string",
+            "description": "Away Value (string representation)"
+          },
+          "compareCode": {
+            "type": "integer",
+            "description": "Compare Code"
+          },
+          "statisticsType": {
+            "type": "string",
+            "description": "Type of Statistic (positive/negative)"
+          },
+          "valueType": {
+            "type": "string",
+            "description": "Value Type (event/team)"
           }
         }
       }

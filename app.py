@@ -11,7 +11,7 @@ from sofascore.sofascore_news import get_sofascore_news_model, getLatestNewsForT
 from sofascore.team_players_stats import fetchTeamPlayerStats, get_team_players_api_model
 from flask_caching import Cache
 from sofascore.league_standings import get_standings_team_model, getLeagueStandings
-from sofascore.team_recent_matches import fetchTeamRecentEventsStats
+from sofascore.team_recent_matches import fetchTeamRecentEventsStats, get_recent_matches_model
 
 app = Flask(__name__)
 
@@ -43,6 +43,7 @@ team_players_model = get_team_players_api_model(api)
 standing_team_model = get_standings_team_model(api)
 upcoming_match_model = get_upcoming_match_model(api)
 team_news_model = get_sofascore_news_model(api)
+team_recent_matches_model = get_recent_matches_model(api)
 
 allowed_league_names = [league.name.lower() for league in FootballLeague]
 
@@ -113,7 +114,7 @@ class TeamPlayersInfo(Resource):
 @teams_ns.param('id', 'The team identifier')
 class TeamRecentMatchesStats(Resource):
     @match_ns.doc('Get team recent matches detailed statistics')
-    # @match_ns.marshal_with(team_players_model)
+    @match_ns.marshal_with(team_recent_matches_model)
     def get(self, id):
         result = fetchTeamRecentEventsStats(id)
         return result
