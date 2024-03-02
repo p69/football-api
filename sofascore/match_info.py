@@ -13,8 +13,8 @@ _team_stats_url_format = "https://sofascores.p.rapidapi.com/v1/teams/statistics/
 def _map_to_team_object(team_json):
    return {
       'id': team_json['id'],
-      'name': team_json['fullName'],
-      'manager': team_json['manager']['name']
+      'name': team_json['name']
+      # 'manager': team_json['manager']['name']
    }
 
 def fetchTeamStats(team_id, season_id, tournament_id):
@@ -263,7 +263,7 @@ def get_match_info_api_model(api):
    team_model = api.model('Team', {
       'id': fields.Integer(readonly=True, description='The team identifier'),
       'name': fields.String(required=True, description='Full team name'),
-      'manager': fields.String(required=True, description='Name of the manager'),
+      # 'manager': fields.String(required=True, description='Name of the manager'),
       'lineup': fields.String(required=True, description='Lineup for current match. Will be "Not Available" if its not available yet'),
       'form': fields.String(required=True, description='Latets results for current team across all tournaments'),
       'overallStatistics': fields.Nested(overall_statistics_model, description='Overall statistics of the team')
